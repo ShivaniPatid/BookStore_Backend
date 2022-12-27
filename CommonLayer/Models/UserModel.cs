@@ -4,7 +4,12 @@ using System.Text;
 
 namespace CommonLayer.Models
 {
-    internal class UserModel
+    public class UserModel
     {
+        //public int UserId { get; set; }
+        public string FullName { get; set; }
+        public string EmailId { get; set; }
+        public string Password { get; set; }
+        public long PhoneNumber { get; set; }
     }
 }
