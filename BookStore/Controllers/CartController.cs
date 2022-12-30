@@ -21,17 +21,25 @@ namespace BookStore.Controllers
         [HttpPost("AddCart")]
         public IActionResult AddCart(int bookId, int quantity)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = cartBL.AddCart(userId, bookId, quantity);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Book added to cart" });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = cartBL.AddCart(userId, bookId, quantity);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Book added to cart" });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Book not added !!" });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Book not added !!" });
 
+                throw;
             }
         }
 
@@ -39,17 +47,25 @@ namespace BookStore.Controllers
         [HttpPut("UpdateCart")]
         public IActionResult UpdateCart(int cartId, int quantity)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = cartBL.UpdateCart(quantity, userId, cartId);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Cart Updated..." });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = cartBL.UpdateCart(quantity, userId, cartId);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Cart Updated..." });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Cart not updated..." });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Cart not updated..." });
 
+                throw;
             }
         }
 
@@ -57,17 +73,25 @@ namespace BookStore.Controllers
         [HttpDelete("DeleteCart")]
         public IActionResult DeleteCart(int cartId)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = cartBL.DeleteCart(userId, cartId);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Cart Deleted..." });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = cartBL.DeleteCart(userId, cartId);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Cart Deleted..." });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Something went wrong..." });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Something went wrong..." });
 
+                throw;
             }
         }
 
