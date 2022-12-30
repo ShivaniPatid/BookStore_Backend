@@ -58,21 +58,29 @@ namespace BookStore.Controllers
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(string email)
         {
-            var result = userBL.ForgetPassword(email);
-            if (result != null)
+            try
             {
-                return this.Ok(new { success = true, message = "Email sent successfully" });
+                var result = userBL.ForgetPassword(email);
+                if (result != null)
+                {
+                    return this.Ok(new { success = true, message = "Email sent successfully" });
+                }
+                else
+                {
+                    return this.BadRequest(new { success = false, message = "Email has not sent" });
+                }
             }
-            else
+            catch (System.Exception)
             {
-                return this.BadRequest(new { success = false, message = "Email has not sent" });
+
+                throw;
             }
         }
 
         [Authorize]
         [HttpPost("ResetPassword")]
-        public IActionResult ResetPassword
-            (string password, string confirmPassword)
+        public IActionResult ResetPassword(string password, string confirmPassword)
+
         {
             try
             {
