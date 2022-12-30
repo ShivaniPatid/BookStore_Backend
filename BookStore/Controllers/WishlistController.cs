@@ -22,17 +22,25 @@ namespace BookStore.Controllers
         [HttpPost("Add")]
         public IActionResult AddToWishlist(int bookId)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = wishlistBL.AddToWishlist(userId, bookId);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Book added to wishlist" });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = wishlistBL.AddToWishlist(userId, bookId);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Book added to wishlist" });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Book not added !!" });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Book not added !!" });
 
+                throw;
             }
         }
 
@@ -65,17 +73,25 @@ namespace BookStore.Controllers
         [HttpDelete("Delete")]
         public IActionResult DeleteFromWishlist(int wishlistId)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = wishlistBL.DeleteFromWishlist(userId, wishlistId);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Book removed from wishlist" });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = wishlistBL.DeleteFromWishlist(userId, wishlistId);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Book removed from wishlist" });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Something went wrong..." });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Something went wrong..." });
 
+                throw;
             }
         }
     }
