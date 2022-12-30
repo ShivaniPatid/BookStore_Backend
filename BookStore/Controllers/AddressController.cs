@@ -23,17 +23,25 @@ namespace BookStore.Controllers
         [HttpPost("Add")]
         public IActionResult AddAddress(AddressModel addressModel)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = addressBL.AddAddress(userId, addressModel);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Address added" });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = addressBL.AddAddress(userId, addressModel);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Address added" });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Address not added !!" });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Address not added !!" });
 
+                throw;
             }
         }
 
@@ -41,17 +49,25 @@ namespace BookStore.Controllers
         [HttpPut("Update")]
         public IActionResult UpdateAddress(AddressModel addressModel)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = addressBL.UpdateAddress(userId, addressModel);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Address Updated..." });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = addressBL.UpdateAddress(userId, addressModel);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Address Updated..." });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Address not updated..." });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Address not updated..." });
 
+                throw;
             }
         }
 
@@ -84,17 +100,25 @@ namespace BookStore.Controllers
         [HttpDelete("Delete")]
         public IActionResult DeleteAddress(int addressId)
         {
-            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
-
-            var result = addressBL.DeleteAddress(userId, addressId);
-            if (result)
+            try
             {
-                return Ok(new { success = true, message = "Address Deleted..." });
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(s => s.Type == "UserId").Value);
+
+                var result = addressBL.DeleteAddress(userId, addressId);
+                if (result)
+                {
+                    return Ok(new { success = true, message = "Address Deleted..." });
+                }
+                else
+                {
+                    return BadRequest(new { success = false, message = "Something went wrong..." });
+
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest(new { success = false, message = "Something went wrong..." });
 
+                throw;
             }
         }
     }
