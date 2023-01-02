@@ -95,6 +95,14 @@ namespace BookStore
             services.AddTransient<IFeedbackRL, FeedbackRL>();
             services.AddTransient<IOrderBL, OrderBL>();
             services.AddTransient<IOrderRL, OrderRL>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                name: "AllowOrigin",
+              builder => {
+                  builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+              });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,6 +112,8 @@ namespace BookStore
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("AllowOrigin");
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
