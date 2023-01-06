@@ -63,7 +63,7 @@ namespace BookStore.Controllers
                 var result = userBL.ForgetPassword(email);
                 if (result != null)
                 {
-                    return this.Ok(new { success = true, message = "Email sent successfully" });
+                    return this.Ok(new { success = true, message = "Email sent successfully", data=result });
                 }
                 else
                 {
