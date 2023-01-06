@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using CommonLayer.Models;
@@ -48,27 +49,37 @@ namespace RepositoryLayer.Service
             try
             {
                 sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
+                SqlCommand sqlCommand = new SqlCommand("GetAllRecordFromWishlist", sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                sqlCommand.Parameters.AddWithValue("@UserId", userId);
                 sqlConnection.Open();
 
-                List<WishlistModel> wishlist = new List<WishlistModel>();
-
-                string query = $"select * from Wishlist where UserId = {userId}";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
                 if (dataReader.HasRows)
                 {
+                    List<WishlistModel> wishModel = new List<WishlistModel>();
+
                     while (dataReader.Read())
                     {
-                        WishlistModel wishlistModel = new WishlistModel()
-                        {
-                            WishlistId = dataReader.GetInt32(0),
-                            UserId = dataReader.GetInt32(1),
-                            BookId = dataReader.GetInt32(2)
-                        };
-                        wishlist.Add(wishlistModel);
+                        BookModel book = new BookModel();
+                        WishlistModel wish = new WishlistModel();
+                        book.BookName = dataReader["BookName"].ToString();
+                        book.AuthorName = dataReader["AuthoreName"].ToString();
+                        book.DiscountedPrice = Convert.ToDecimal(dataReader["DiscountPrice"]);
+                        book.OriginalPrice = Convert.ToDecimal(dataReader["OriginalPrice"]);
+                        book.BookImage = dataReader["BookImage"].ToString();
+                        wish.WishlistId = Convert.ToInt32(dataReader["WishlistId"]);
+                        wish.UserId = Convert.ToInt32(dataReader["UserId"]);
+                        wish.BookId = Convert.ToInt32(dataReader["BookId"]);
+                        wish.Bookmodel = book;
+                        wishModel.Add(wish);
+
                     }
-                    return wishlist;
+                    sqlConnection.Close();
+                    return wishModel;
                 }
                 else
                     return null;

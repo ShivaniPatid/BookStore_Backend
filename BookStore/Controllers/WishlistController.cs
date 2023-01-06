@@ -29,7 +29,7 @@ namespace BookStore.Controllers
                 var result = wishlistBL.AddToWishlist(userId, bookId);
                 if (result)
                 {
-                    return Ok(new { success = true, message = "Book added to wishlist" });
+                    return Ok(new { success = true, message = "Book added to wishlist", data= result });
                 }
                 else
                 {
