@@ -13,7 +13,9 @@ namespace CommonLayer.Models
         public string BookImage { get; set; }
         public float Rating { get; set; }
         public int Totalview { get; set; }
-        public float DiscountedPrice { get; set; }
-        public float OriginalPrice { get; set; }
+        public decimal DiscountedPrice { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public int Quantity { get; set; }
+
     }
 }

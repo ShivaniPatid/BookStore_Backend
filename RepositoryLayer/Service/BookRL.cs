@@ -27,7 +27,7 @@ namespace RepositoryLayer.Service
                 sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
                 sqlConnection.Open();
 
-                string query = $"insert into Books values('{bookModel.BookName}','{bookModel.AuthorName}','{bookModel.BookDescription}','{bookModel.BookImage}','{bookModel.Rating}','{bookModel.Totalview}','{bookModel.OriginalPrice}','{bookModel.DiscountedPrice}')";
+                string query = $"insert into Books values('{bookModel.BookName}','{bookModel.AuthorName}','{bookModel.BookDescription}','{bookModel.BookImage}','{bookModel.Rating}','{bookModel.Totalview}','{bookModel.OriginalPrice}','{bookModel.DiscountedPrice}',{bookModel.Quantity} )";
                 SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 int result = sqlCommand.ExecuteNonQuery();
 
@@ -58,7 +58,7 @@ namespace RepositoryLayer.Service
                 string query = $"update Books set BookName = '{bookModel.BookName}',AuthoreName = '{bookModel.AuthorName}'," +
                     $" BookDescription = '{bookModel.BookDescription}', BookImage = '{bookModel.BookImage}', " +
                     $"Rating = '{bookModel.Rating}', TotalView = '{bookModel.Totalview}',OriginalPrice = '{bookModel.OriginalPrice}'," +
-                    $" DiscountPrice = '{bookModel.DiscountedPrice}' where BookId = '{bookModel.BookId}'";
+                    $" DiscountPrice = '{bookModel.DiscountedPrice}', Quantity = '{bookModel.Quantity}' where BookId = '{bookModel.BookId}'";
                 SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 int result = sqlCommand.ExecuteNonQuery();
 
@@ -131,8 +131,9 @@ namespace RepositoryLayer.Service
                             BookImage = dataReader.GetString(4),
                             Rating = (float)dataReader.GetDouble(5),
                             Totalview = dataReader.GetInt32(6),
-                            OriginalPrice = (float)dataReader.GetDouble(7),
-                            DiscountedPrice = (float)dataReader.GetDouble(8)
+                            OriginalPrice = (decimal)dataReader.GetDouble(7),
+                            DiscountedPrice = (decimal)dataReader.GetDouble(8),
+                            Quantity = dataReader.GetInt32(9),
                         };
                          books.Add(bookModel);
                         
@@ -176,8 +177,9 @@ namespace RepositoryLayer.Service
                         bookModel.BookImage = dataReader.GetString(4);
                         bookModel.Rating = (float)dataReader.GetDouble(5);
                         bookModel.Totalview = dataReader.GetInt32(6);
-                        bookModel.OriginalPrice = (float)dataReader.GetDouble(7);
-                        bookModel.DiscountedPrice = (float)dataReader.GetDouble(8);
+                        bookModel.OriginalPrice = (decimal)dataReader.GetDouble(7);
+                        bookModel.DiscountedPrice = (decimal)dataReader.GetDouble(8);
+                        bookModel.Quantity = dataReader.GetInt32(9);
                     }
                     return bookModel;
 
