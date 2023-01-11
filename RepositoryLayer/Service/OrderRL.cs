@@ -29,11 +29,13 @@ namespace RepositoryLayer.Service
                 {
                     CommandType = CommandType.StoredProcedure
                 };
+                //sqlCommand.Parameters.AddWithValue("@TotalPrice", order.TotalPrice);
                 sqlCommand.Parameters.AddWithValue("@BookQuantity", order.Quantity);
                 sqlCommand.Parameters.AddWithValue("@UserId", userId);
                 sqlCommand.Parameters.AddWithValue("@BookId", order.BookId);
                 sqlCommand.Parameters.AddWithValue("@AddressId", order.AddressId);
                 sqlCommand.Parameters.AddWithValue("@BookCount", order.BookCount);
+
 
                 this.sqlConnection.Open();
                 int i = Convert.ToInt32(sqlCommand.ExecuteScalar());
@@ -81,6 +83,7 @@ namespace RepositoryLayer.Service
                     List<OrderModel> order = new List<OrderModel>();
                     while (reader.Read())
                     {
+                        BookModel bookModel = new BookModel();
                         OrderModel orderModel = new OrderModel();
                         orderModel.OrderId = Convert.ToInt32(reader["OrderId"]);
                         orderModel.TotalPrice = Convert.ToInt32(reader["TotalPrice"]);
@@ -89,6 +92,13 @@ namespace RepositoryLayer.Service
                         orderModel.UserId = Convert.ToInt32(reader["UserId"]);
                         orderModel.BookId = Convert.ToInt32(reader["bookId"]);
                         orderModel.AddressId = Convert.ToInt32(reader["AddressId"]);
+                        bookModel.BookName = reader["BookName"].ToString();
+                        bookModel.AuthorName = reader["AuthoreName"].ToString();
+                        bookModel.BookImage = reader["bookImage"].ToString();
+                        bookModel.OriginalPrice = Convert.ToDecimal(reader["originalPrice"]);
+                        bookModel.DiscountedPrice = Convert.ToDecimal(reader["discountPrice"]);
+
+                        orderModel.BookModel = bookModel;
                         order.Add(orderModel);
                     }
                     this.sqlConnection.Close();
