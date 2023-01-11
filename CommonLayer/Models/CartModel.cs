@@ -10,5 +10,7 @@ namespace CommonLayer.Models
         public int Quantity { get; set; }
         public int UserId { get; set; }
         public int BookId { get; set; }
+        public BookModel Bookmodel { get; set; }
+
     }
 }

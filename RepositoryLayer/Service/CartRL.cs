@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Net;
 using System.Text;
@@ -99,28 +100,37 @@ namespace RepositoryLayer.Service
             try
             {
                 sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
+                SqlCommand sqlCommand = new SqlCommand("GetCartByUserId", sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                sqlCommand.Parameters.AddWithValue("@UserId", userId);
+
                 sqlConnection.Open();
 
-                List<CartModel> cart = new List<CartModel>();
-
-                string query = $"select * from Cart where UserId = {userId}";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 SqlDataReader dataReader = sqlCommand.ExecuteReader();
                 
                 if(dataReader.HasRows)
                 {
+                    List<CartModel> cartModel = new List<CartModel>();
                     while (dataReader.Read())
                     {
-                        CartModel cartModel = new CartModel()
-                        {
-                            CartId = dataReader.GetInt32(0),
-                            Quantity = dataReader.GetInt32(1),
-                            UserId = dataReader.GetInt32(2),
-                            BookId = dataReader.GetInt32(3)
-                        };
-                        cart.Add(cartModel);
+                        BookModel book = new BookModel();
+                        CartModel cart = new CartModel();
+                        book.BookName = dataReader["bookName"].ToString();
+                        book.AuthorName = dataReader["AuthoreName"].ToString();
+                        book.OriginalPrice = Convert.ToDecimal(dataReader["originalPrice"]);
+                        book.DiscountedPrice = Convert.ToDecimal(dataReader["discountPrice"]);
+                        book.BookImage = dataReader["bookImage"].ToString();
+                        cart.UserId = Convert.ToInt32(dataReader["UserId"]);
+                        cart.BookId = Convert.ToInt32(dataReader["BookId"]);
+                        cart.CartId = Convert.ToInt32(dataReader["CartId"]);
+                        cart.Quantity = Convert.ToInt32(dataReader["Quantity"]);
+                        cart.Bookmodel = book;
+                        cartModel.Add(cart);
                     }
-                    return cart;
+                    sqlConnection.Close();
+                    return cartModel;
                 }
                 else
                     return null;
