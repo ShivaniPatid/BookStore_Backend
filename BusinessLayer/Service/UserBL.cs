@@ -68,5 +68,19 @@ namespace BusinessLayer.Service
             }
         }
 
+        public UserModel GetUser(string emailId)
+        {
+            try
+            {
+                return userRL.GetUser(emailId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
     }
 }

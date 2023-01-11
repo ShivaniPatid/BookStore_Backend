@@ -100,5 +100,28 @@ namespace BookStore.Controllers
                 throw;
             }
         }
+
+        [Authorize]
+        [HttpGet("GetUser")]
+        public IActionResult GetUSer()
+        {
+            try
+            {
+                var emailId = User.FindFirst(ClaimTypes.Email).Value.ToString();
+                var result = userBL.GetUser(emailId);
+                if (result != null)
+                {
+                    return this.Ok(new { success = true, message = "Get User Details", data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { success = false, message = "something went wrong" });
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
     }
 }

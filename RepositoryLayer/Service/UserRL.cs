@@ -184,5 +184,43 @@ namespace RepositoryLayer.Service
             string result = new string(decoded_Char);
             return result;
         }
+
+        public UserModel GetUser(string emailId)
+        {
+            try
+            {
+                sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
+                sqlConnection.Open();
+
+                string query = $"select * from Users where EmailId='{emailId}'";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                if (dataReader.HasRows)
+                {
+                    UserModel userModel = new UserModel();
+
+                    while (dataReader.Read())
+                    {
+                        userModel.UserId = dataReader.GetInt32(0);
+                        userModel.FullName = dataReader.GetString(1);
+                        userModel.EmailId = dataReader.GetString(2);
+                        userModel.Password = dataReader.GetString(3);
+                        userModel.PhoneNumber = dataReader.GetInt64(4);
+                    }
+                    return userModel;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
+
     }
 }

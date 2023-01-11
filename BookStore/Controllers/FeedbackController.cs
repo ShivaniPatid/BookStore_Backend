@@ -46,7 +46,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpGet("GetFeedback")]
         public IActionResult GetFeedback(int bookId)
         {

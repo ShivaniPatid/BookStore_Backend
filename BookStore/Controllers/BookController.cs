@@ -86,7 +86,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetAllBooks")]
         public IActionResult GetAllBooks()
         {

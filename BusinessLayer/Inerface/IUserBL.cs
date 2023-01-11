@@ -10,7 +10,8 @@ namespace BusinessLayer.Inerface
         public UserModel Register(UserModel userModel);
         public string Login(string emailId, string password);
         public string ForgetPassword(string emailId);
-        public bool ResetPassword(string emailId, string password, string confirmPassword);
+        public bool ResetPassword(string emailId, string password, string confirmPassword);       
+        public UserModel GetUser(string emailId);
 
 
     }
