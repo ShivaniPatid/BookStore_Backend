@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Net;
 using System.Text;
@@ -77,30 +78,33 @@ namespace RepositoryLayer.Service
             try
             {
                 sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
+                SqlCommand sqlCommand = new SqlCommand("GetAllAddress", sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                sqlCommand.Parameters.AddWithValue("@UserId", userId);
                 sqlConnection.Open();
 
-                List<AddressModel> address = new List<AddressModel>();
-
-                string query = $"select * from AddressTable where UserId = {userId}";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
                 if (dataReader.HasRows)
                 {
+                    List<AddressModel> addressModel = new List<AddressModel>();
                     while (dataReader.Read())
                     {
-                        AddressModel addressModel = new AddressModel()
+                        addressModel.Add(new AddressModel
                         {
-                            AddressId = dataReader.GetInt32(0),
-                            FullAddress = dataReader.GetString(1),
-                            City = dataReader.GetString(2),
-                            State = dataReader.GetString(3),
-                            TypeId = dataReader.GetInt32(4),
-                            UserId = dataReader.GetInt32(5)
-                        };
-                       address.Add(addressModel);
+                            AddressId = Convert.ToInt32(dataReader["AddressId"]),
+                            FullAddress = dataReader["FullAddress"].ToString(),
+                            City = dataReader["City"].ToString(),
+                            State = dataReader["State"].ToString(),
+                            TypeId = Convert.ToInt32(dataReader["TypeId"]),
+                            UserId = Convert.ToInt32(dataReader["UserId"])
+                        });
                     }
-                    return address;
+                    sqlConnection.Close();
+                    return addressModel;
                 }
                 else
                     return null;
