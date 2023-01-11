@@ -76,7 +76,7 @@ namespace RepositoryLayer.Service
                         wish.BookId = Convert.ToInt32(dataReader["BookId"]);
                         wish.Bookmodel = book;
                         wishModel.Add(wish);
-
+                        
                     }
                     sqlConnection.Close();
                     return wishModel;
