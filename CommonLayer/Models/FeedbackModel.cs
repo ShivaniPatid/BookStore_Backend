@@ -11,5 +11,6 @@ namespace CommonLayer.Models
         public int Rating { get; set; }
         public int BookId { get; set; }
         public int UserId { get; set; }
+        public UserModel UserModel { get; set; }
     }
 }

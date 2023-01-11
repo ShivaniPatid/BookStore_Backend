@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using CommonLayer.Models;
@@ -47,29 +48,37 @@ namespace RepositoryLayer.Service
         {
             try{
                 sqlConnection = new SqlConnection(this.configuration["ConnectionStrings:BookStore"]);
+                SqlCommand sqlCommand = new SqlCommand("GetAllFeedback", sqlConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                sqlCommand.Parameters.AddWithValue("@BookId", bookId);
                 sqlConnection.Open();
 
-                List<FeedbackModel> feedback = new List<FeedbackModel>();
-
-                string query = $"select * from FeedbackTable where BookId = {bookId}";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
                 if (dataReader.HasRows)
                 {
+                    List<FeedbackModel> feedbackModel = new List<FeedbackModel>();
+
                     while (dataReader.Read())
                     {
-                        FeedbackModel feedbackModel = new FeedbackModel()
+                        FeedbackModel feedback = new FeedbackModel();
+
+                        UserModel user = new UserModel
                         {
-                            FeedbackId = dataReader.GetInt32(0),
-                            Comment = dataReader.GetString(1),
-                            Rating = dataReader.GetInt32(2),
-                            BookId = dataReader.GetInt32(3),
-                            UserId = dataReader.GetInt32(4)
+                            FullName = dataReader["FullName"].ToString(),
                         };
-                        feedback.Add(feedbackModel);
+                        feedback.FeedbackId = Convert.ToInt32(dataReader["FeedbackId"]);
+                        feedback.Comment = dataReader["Comment"].ToString();
+                        feedback.Rating = Convert.ToInt32(dataReader["Rating"]);
+                        feedback.BookId = Convert.ToInt32(dataReader["BookId"]);
+                        feedback.UserModel = user;
+                        feedbackModel.Add(feedback);
                     }
-                    return feedback;
+                    sqlConnection.Close();
+                    return feedbackModel;
                 }
                 else
                     return null;
